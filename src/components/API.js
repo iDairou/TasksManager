@@ -19,6 +19,17 @@ class API {
     const options = { method: "DELETE" };
     return this._fetch(options, `/${id}`);
   };
+  
+  updateData(id, data) {
+    const options = {
+      method: "PUT",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    return this._fetch(options, `/${id}`);
+  }
 
   _fetch = (options, additionalPath = "") => {
     const url = this.url + additionalPath;

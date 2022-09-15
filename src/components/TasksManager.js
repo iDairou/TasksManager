@@ -9,7 +9,6 @@ class TasksManager extends React.Component {
   constructor() {
     super();
     this.api = new API();
-    this.handleStart = this.handleStart.bind(this);
   }
 
   onClick = () => {
@@ -17,19 +16,20 @@ class TasksManager extends React.Component {
   };
 
   render() {
+
     const { name } = this.state;
     return (
-      <div>
-        <h1 onClick={this.onClick}>TasksManager</h1>
-        <form onSubmit={this.handleSubmit}>
-          <div>
-            <input value={name} onChange={this.changeHandler} />
-          </div>
-          <div>
-            <input type="submit" />
-          </div>
+      <div className="panel">
+        <h1 className="panel__h1" onClick={this.onClick}>
+          TasksManager
+        </h1>
+        <p className="panel__description">Enter the name of the task</p>
+        <form className="panel__form" onSubmit={this.handleSubmit}>
+          <label className="panel__form--label" name='task-name'>Task name:</label>
+          <input className="panel__form--bar" name='task-name' value={name} onChange={this.changeHandler} />
+          <input className="panel__form--button" type="submit" value='Add'/>
         </form>
-        <main>{this.renderTasks()}</main>
+        <main className="tasks-list" >{this.renderTasks()}</main>
       </div>
     );
   }
@@ -37,25 +37,33 @@ class TasksManager extends React.Component {
     const { tasks } = this.state;
     return tasks.map((t, index) => {
       return (
-        <section key={index}>
-          <header>
+        <section className="task" key={index}>
+          <header className="task__header">
             {t.name}, {t.time}
           </header>
-          <footer>
-            <button onClick={() => this.handleStart(t.name, t.isRunning)}>
+          <footer className="task__buttons">
+            <button className="task__buttons--start button" onClick={() => this.handleStart(t.name, t.isRunning)}>
               start
             </button>
-            <button onClick={() => this.handleStop(t.name)}>stop</button>
-            <button onClick={this.handleFinish}>zakończone</button>
-            <button onClick={() => this.removeTask(t.name, t.id)}>usuń</button>
+            <button className="task__buttons--stop button" onClick={() => this.handleStop(t.name)}>stop</button>
+            <button className="task__buttons--finish button" onClick={this.handleFinish}>zakończone</button>
+            <button className="task__buttons--delete button" onClick={() => this.removeTask(t.name, t.id)}>usuń</button>
           </footer>
         </section>
       );
     });
   };
+
+  componentDidMount = () => {
+    return this.api.loadData().then((data) => {
+      this.setState({
+        tasks: data,
+      });
+    });
+  };
+
   handleFinish = (taskName) => {
     const { tasks } = this.state;
-
     console.log(test);
   };
   // handleStartStop(taskName) {
@@ -71,14 +79,9 @@ class TasksManager extends React.Component {
     this.id = setInterval(() => {
       this.incrementTime(taskName);
     }, 1000);
-    console.log(this);
   };
 
-  handleStop = (taskName) => {
-    const { tasks } = this.state;
-    // const currentTask = tasks.includes((t) => {
-    //   t.name !== taskName;
-    // });
+  handleStop = () => {
     clearInterval(this.id);
   };
 
@@ -86,6 +89,7 @@ class TasksManager extends React.Component {
     this.setState((state) => {
       const newTasks = state.tasks.map((task) => {
         if (task.name === taskName) {
+        
           return { ...task, time: task.time + 1 };
         }
         return task;
@@ -102,7 +106,7 @@ class TasksManager extends React.Component {
     this.setState({
       tasks: currTasks,
     });
-    return this.api.removeData(id).then((data) => {});
+    return this.api.removeData(id);
   };
 
   handleSubmit = (e) => {
@@ -123,20 +127,6 @@ class TasksManager extends React.Component {
           name: "",
         });
       });
-
-    // this.setState({
-    //   tasks: [
-    //     ...tasks,
-    //     {
-    //       name: name,
-    //       time: 0,
-    //       isRunning: false,
-    //       isDone: false,
-    //       isRemoved: false,
-    //     },
-    //   ],
-    //   name: "",
-    // });
   };
   changeHandler = (e) => {
     this.setState({ name: e.target.value });
