@@ -1,28 +1,12 @@
 {
   "data": [
     {
-      "name": "1",
-      "time": 0,
-      "isRunning": false,
-      "isDone": false,
-      "isRemoved": false,
-      "id": 1
-    },
-    {
       "name": "2",
       "time": 0,
       "isRunning": false,
       "isDone": false,
       "isRemoved": false,
       "id": 2
-    },
-    {
-      "name": "3",
-      "time": 0,
-      "isRunning": false,
-      "isDone": false,
-      "isRemoved": false,
-      "id": 3
     }
   ]
 }
