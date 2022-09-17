@@ -6,9 +6,9 @@ class TasksManager extends React.Component {
     tasks: [],
     name: "",
   };
+  api = new API();
   constructor() {
     super();
-    this.api = new API();
   }
 
   onClick = () => {
@@ -33,56 +33,70 @@ class TasksManager extends React.Component {
             value={name}
             onChange={this.changeHandler}
           />
-          <input className="panel__form--button" type="submit" value="Add" />
+          <input
+            className="panel__form--button button"
+            type="submit"
+            value="Add"
+          />
         </form>
         <main className="tasks-list">{this.renderTasks()}</main>
       </div>
     );
   }
-  renderTasks = () => {
+  renderTasks() {
     const { tasks } = this.state;
-    return tasks.map((t, index) => {
-      console.log(t, index);
-
-      return (
-        <section className="task" key={index}>
-          <header className="task__header">
-            {t.name}, {t.time}
-          </header>
-          <footer className="task__buttons">
-            <button
-              className="task__buttons--start button"
-              onClick={() => this.handleStart(t.name)}
-              disabled={t.isRunning ? true : false || t.isDone ? true : false}
-            >
-              start
-            </button>
-            <button
-              className="task__buttons--stop button"
-              onClick={() => this.handleStop(t.name)}
-              disabled={t.isRunning ? false : true || t.isDone ? true : false}
-            >
-              stop
-            </button>
-            <button
-              className="task__buttons--finish button"
-              onClick={() => this.handleFinish(t.name)}
-              disabled={t.isDone ? true : false}
-            >
-              finished
-            </button>
-            <button
-              className="task__buttons--delete button"
-              onClick={() => this.removeTask(t.id)}
-              disabled={t.isDone ? false : true}
-            >
-              delete
-            </button>
-          </footer>
-        </section>
-      );
-    });
-  };
+    // tasks.forEach(task =>{
+    //   if (task.isRunning === true) {
+    //     console.log(task);
+    //   }
+    // })
+    return tasks
+      .sort((a, b) => a.isDone - b.isDone)
+      .map((t, index) => {
+        return (
+          <section className={`task ${t.isDone && "task--done"}`} key={index}>
+            <header className="task__header">
+              <p className="task__header--name">{t.name}</p>
+              <p className="task__header--time">Time: {t.time}</p>
+            </header>
+            <footer className="task__buttons">
+              <button
+                className={`task__buttons--start button ${
+                  t.isRunning && "disabled"
+                }`}
+                onClick={() => this.handleStart(t.name)}
+                disabled={this.handleDisableStart(t.isRunning, t.isDone)}
+              >
+                Start
+              </button>
+              <button
+                className={`task__buttons--stop button ${
+                  !t.isRunning && "disabled"
+                }`}
+                onClick={() => this.handleStop(t.name)}
+                disabled={this.handleDisableStop(t.isRunning, t.isDone)}
+              >
+                Pause
+              </button>
+              <button
+                className="task__buttons--finish button"
+                onClick={() => this.handleFinish(t.name)}
+                disabled={t.isDone ? true : false}
+              >
+                Finished
+              </button>
+              <button
+                className="task__buttons--delete button"
+                onClick={() => this.removeTask(t.id)}
+                disabled={t.isDone ? false : true}
+              >
+                Delete
+              </button>
+            </footer>
+          </section>
+        );
+      });
+  }
 
   componentDidMount = () => {
     return this.api.loadData().then((data) => {
@@ -91,7 +105,15 @@ class TasksManager extends React.Component {
       });
     });
   };
-
+  handleDisableStart(taskRun, taskDone) {
+    return taskRun ? true : false || taskDone ? true : false;
+  }
+  handleDisableStop(taskRun, taskDone) {
+    return taskRun ? false : true || taskDone ? true : false;
+  }
+  checkInterval = (tasks) => {
+    console.log(tasks);
+  };
   // Po kliknięciu 'finished' isDone = true. Na tej podstawie będę dodawał odpowiednią klasę przy renderowaniu np. przekreślenie tekstu + disabled przycisków,
   // brakuje mi tutaj pomysłu jak przenieść kliknięty task na koniec listy.
 
@@ -111,24 +133,31 @@ class TasksManager extends React.Component {
   };
 
   // Problem ze STOP, działa w porządku jeśli operuję na jednym tasku, jeśli odpalimy kilka zadań na raz - wówczas prawidłowo STOP zadziała tylko w ostatnim wystartowanym zadaniu. Na reszcie zaczyna wartiować
-  // Dodatkowo brakuje tutaj updatu licznika na serwerze JSON i nie bardzo mam pomysł jak to ogarnąć, żeby jednak zachowywać te dane.
 
   handleStart = (taskName) => {
     this.interval = setInterval(() => {
-      this.incrementTime(taskName, 1, true);
+      this.incrementTime(taskName, true);
     }, 1000);
+    console.log(this.interval);
   };
 
   handleStop = (taskName) => {
     clearInterval(this.interval);
-    this.incrementTime(taskName, 0, false);
+    console.log(this.interval);
+    this.incrementTime(taskName, false);
   };
 
-  incrementTime(taskName, num, boolean) {
+  incrementTime(taskName, boolean) {
     this.setState((state) => {
       const newTasks = state.tasks.map((task) => {
         if (task.name === taskName) {
-          return { ...task, time: task.time + num, isRunning: boolean };
+          const updated = {
+            ...task,
+            time: task.time + 1,
+            isRunning: boolean,
+          };
+          this.api.updateData(task.id, updated);
+          return updated;
         }
         return task;
       });
@@ -137,7 +166,9 @@ class TasksManager extends React.Component {
       };
     });
   }
-  ///////////////////////////////////////////////////////////
+  sendToJSON(data) {
+    return this.api.addData(data);
+  }
 
   removeTask = (id) => {
     const { tasks } = this.state;
@@ -150,20 +181,22 @@ class TasksManager extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     const { name, tasks } = this.state;
-    return this.api
-      .addData({
-        name: name,
-        time: 0,
-        isRunning: false,
-        isDone: false,
-        isRemoved: false,
-      })
-      .then((data) => {
-        this.setState({
-          tasks: [...tasks, data],
-          name: "",
+    if (name != "") {
+      return this.api
+        .addData({
+          name: name,
+          time: 0,
+          isRunning: false,
+          isDone: false,
+          isRemoved: false,
+        })
+        .then((data) => {
+          this.setState({
+            tasks: [...tasks, data],
+            name: "",
+          });
         });
-      });
+    }
   };
   changeHandler = (e) => {
     this.setState({ name: e.target.value });
