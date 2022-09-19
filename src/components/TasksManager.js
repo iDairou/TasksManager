@@ -20,16 +20,14 @@ class TasksManager extends React.Component {
     return (
       <div className="panel">
         <h1 className="panel__h1" onClick={this.onClick}>
-          TasksManager
+          Your Tasks Manager
         </h1>
         <p className="panel__description">Enter the name of the task</p>
         <form className="panel__form" onSubmit={this.handleSubmit}>
-          <label className="panel__form--label" name="task-name">
-            Task name:
-          </label>
           <input
             className="panel__form--bar"
             name="task-name"
+            placeholder="Your task..."
             value={name}
             onChange={this.changeHandler}
           />
@@ -43,6 +41,7 @@ class TasksManager extends React.Component {
       </div>
     );
   }
+
   renderTasks() {
     const { tasks } = this.state;
     // tasks.forEach(task =>{

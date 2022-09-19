@@ -1,27 +1,36 @@
+:root{
+    --backgroundColor: linear-gradient(to top, #e6dada, #274046);
+    --panelColor: linear-gradient(to right, #7f90a1, #29323c);
+    --inputBarColor: #916363;
+    --oddTask: #899cb1;
+    --evenTask: #93b1cf;
+    --headerColor: #dce3eb;
+    --borderColor: rgb(22, 20, 20);
+    --iconColor: rgb(5, 226, 255);
+    --taskTextColor: rgb(255, 255, 255);
+}
 body {
-    background: #a4c9fa;
+    background: var(--backgroundColor);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     font-family: 'Open Sans', sans-serif;
 }
-#root{
- 
-}
+
 .panel{
     height: auto;
     width: 70%;
     margin: 0 auto;
     text-align: center;
-    border: 2px solid white;
     border-radius: 10px;
-    background-color: #d3e4fa;
+    background: var(--panelColor);
+    color: var(--headerColor)
 }
 .panel__h1{
-    font-size: 50px;
+    font-size: 40px;
 }
 .panel__description{
     font-size: 20px;
-}
-.panel__form--label{
-    margin-right: 5px;
 }
 .button {
     border: none;
@@ -30,10 +39,10 @@ body {
     cursor: pointer;
 }
 .task__buttons--start{
-    background-color: rgb(8, 248, 0);
+    background-color: var(--iconColor);
 }
 .task__buttons--stop{
-    background-color: rgb(252, 185, 0);
+    background-color: var(--iconColor);
 }
 .disabled {
     cursor: not-allowed;
@@ -53,32 +62,38 @@ body {
     opacity: .3;
     z-index: 100;
 }
-.task--done :not(footer){
-    opacity: .2;
+.task--done {
+    border: 3px solid rgb(1, 252, 1)!important
 }
 
 .task{
     border-radius: 10px;
     margin: 5px;
-    border: 3px dotted white ;
     position: relative;
+    color: var(--taskTextColor);
 }
 .tasks-list>.task:nth-child(odd){
-    background-color: rgb(180, 240, 248);
+    background-color: var(--oddTask)
 }
 .tasks-list>.task:nth-child(even){
-    background-color: rgb(211, 221, 226)
+    background-color: var(--evenTask)
 }
 .task--done{
     background-color: red;
 }
 
 .task__header--name{
-    padding: 20px;
+    padding: 30px;
+    margin-top: ;
 }
 .task__buttons{
-    margin: 5px;
+    margin: 0 auto;
     opacity: 1!important;
+    border-top: 1px solid var(--borderColor);
+    width: 100%;
+}
+.task__buttons>button{
+    margin: 5px;
 }
 
 .task__header--time{
@@ -86,4 +101,29 @@ body {
     top: 0;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+.panel__form--bar{
+    width: 30%;
+    padding: 15px;
+    border: 2px solid var(--borderColor);
+    border-radius: 4px 0 0 4px;
+    background: transparent;
+    color: white;
+    outline: none;
+} 
+.panel__form--bar::placeholder{
+    color: white;
+    opacity: .5;
+}
+.panel__form--button{ 
+    padding: 17px;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    background: var(--borderColor);
+    color: white;
+    cursor: pointer;
+    transition: filter .3s;
+}
+.panel__form--button:hover{
+    filter: brightness(150%);
 }
