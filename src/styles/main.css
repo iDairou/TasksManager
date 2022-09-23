@@ -27,7 +27,7 @@ body {
     color: var(--headerColor)
 }
 .panel__h1{
-    font-size: 40px;
+    font-size: 35px;
 }
 .panel__description{
     font-size: 20px;
@@ -84,7 +84,6 @@ body {
 
 .task__header--name{
     padding: 30px;
-    margin-top: ;
 }
 .task__buttons{
     margin: 0 auto;
@@ -126,4 +125,14 @@ body {
 }
 .panel__form--button:hover{
     filter: brightness(150%);
+}
+.date{
+    position: absolute;
+    font-size: 10px;
+    left: 70%;
+}
+.clock{
+    position: absolute;
+    left: 70%;
+    top: 6%;
 }

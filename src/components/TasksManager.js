@@ -1,10 +1,14 @@
 import React from "react";
 import API from "./API";
+import Date from "./Date";
+import Moment from "moment";
+import Time from "./Time";
 
 class TasksManager extends React.Component {
   state = {
     tasks: [],
     name: "",
+    date: Moment().format("DD-MM-YYYY"),
   };
   api = new API();
   constructor() {
@@ -19,6 +23,8 @@ class TasksManager extends React.Component {
     const { name } = this.state;
     return (
       <div className="panel">
+        <Date date={this.renderDate()}></Date>
+        <Time></Time>
         <h1 className="panel__h1" onClick={this.onClick}>
           Your Tasks Manager
         </h1>
@@ -41,7 +47,10 @@ class TasksManager extends React.Component {
       </div>
     );
   }
-
+  renderDate() {
+    const { date } = this.state;
+    return <h2>{date}</h2>;
+  }
   renderTasks() {
     const { tasks } = this.state;
     // tasks.forEach(task =>{
@@ -113,8 +122,6 @@ class TasksManager extends React.Component {
   checkInterval = (tasks) => {
     console.log(tasks);
   };
-  // Po kliknięciu 'finished' isDone = true. Na tej podstawie będę dodawał odpowiednią klasę przy renderowaniu np. przekreślenie tekstu + disabled przycisków,
-  // brakuje mi tutaj pomysłu jak przenieść kliknięty task na koniec listy.
 
   handleFinish = (taskName) => {
     this.setState((state) => {
@@ -130,8 +137,6 @@ class TasksManager extends React.Component {
     });
     this.handleStop(taskName);
   };
-
-  // Problem ze STOP, działa w porządku jeśli operuję na jednym tasku, jeśli odpalimy kilka zadań na raz - wówczas prawidłowo STOP zadziała tylko w ostatnim wystartowanym zadaniu. Na reszcie zaczyna wartiować
 
   handleStart = (taskName) => {
     this.interval = setInterval(() => {
