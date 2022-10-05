@@ -1,6 +1,11 @@
-To install:
-npm i
-To run:
-npm start
+
+Install:
+
+### `npm i`
+
+Run:
+
+### `npm test`
 
 Readme will be ready soon...
+
