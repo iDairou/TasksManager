@@ -5,7 +5,7 @@ Install:
 
 Run:
 
-### `npm test`
+### `npm start`
 
 Readme will be ready soon...
 
