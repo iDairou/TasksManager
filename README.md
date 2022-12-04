@@ -2,9 +2,9 @@
 
 ## Overview 🔍
 
-![](./src/img/Animation.gif)
+![](./src/images/Animation.gif)
 
-The aim of the project was to create a task management application. Communication is via local api (JSON Server).
+The aim of the project was to create a task management application. Communication is via local api (JSON Server). The structure and funcionality in this project i made focusing on Class components.
 
 ### Features:
 
