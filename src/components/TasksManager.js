@@ -157,7 +157,7 @@ class TasksManager extends React.Component {
         if (task.name === taskName) {
           const updated = {
             ...task,
-            time: task.time + 1,
+            time: boolean === false ? task.time : task.time + 1,
             isRunning: boolean,
           };
           this.api.updateData(task.id, updated);
