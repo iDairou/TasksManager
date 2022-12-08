@@ -4,7 +4,7 @@
 
 ![](./src/images/Animation.gif)
 
-The aim of the project was to create a task management application. Tasks data is stored in a local database and retrieved using a local API (JSON Server). The structure and functionality in this project I made focusing on react class components.
+The aim of the project was to create a task management application. Tasks data is stored in a local database and retrieved using a **local API (JSON Server).** The structure and functionality in this project I made focusing on React **class components.**
 
 ### Features:
 
